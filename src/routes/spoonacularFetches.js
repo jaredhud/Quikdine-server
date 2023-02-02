@@ -3,6 +3,8 @@ import { debug } from "../server.js";
 import myConfig from "dotenv";
 import fetch from "node-fetch";
 
+import { placeholderRecipes } from "../../placeholderRecipes.js";
+
 myConfig.config();
 const router = Router();
 const spoonAPIKey = process.env.SPOONACULAR_API_KEY;
@@ -49,10 +51,11 @@ router.post("/search", async (req, res) => {
 
   try {
     // fetch request with SoQL query based on outcome of switch statement
-    const response = await fetch(fetchString);
-    const recipes = await response.json();
+    console.log(fetchString);
+    // const response = await fetch(fetchString);
+    // const recipes = await response.json();
 
-    res.send(recipes);
+    res.send(placeholderRecipes);
   } catch (error) {
     debug(error);
     res.status(500).send(error);
