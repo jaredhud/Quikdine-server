@@ -16,9 +16,6 @@ app.use(express.static("build"));
 // app.use("/api/user", userRouter);
 app.use("/api/spoonacular", spoonacularRouter);
 
-app.get("/test", (req, res) => {
-  res.send("Hello World");
-});
 app.use("*", (req, res) => {
   res.sendFile(path.resolve("build", "index.html"));
 });

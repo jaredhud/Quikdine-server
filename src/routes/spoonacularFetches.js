@@ -12,7 +12,7 @@ router.post("/search", async (req, res) => {
   debug("in search fetch route", req.body);
 
   const query = req.body.query;
-  const ingredients = req.body.ingredients;
+  const ingredients = req.body.ingredientList;
   const mealType = req.body.mealType;
   const cuisine = req.body.cuisine;
   const diet = req.body.diet;
