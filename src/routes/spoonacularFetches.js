@@ -1,197 +1,75 @@
 import { Router } from "express";
 import { debug } from "../server.js";
+import myConfig from "dotenv";
 import fetch from "node-fetch";
 
+myConfig.config();
 const router = Router();
+const spoonAPIKey = process.env.SPOONACULAR_API_KEY;
 
+//pull up array of recipes
 router.post("/search", async (req, res) => {
-  const seasonReq = req.body.timeFilters;
-  const weights = req.body.weights;
-  const crimeReq = req.body.crimeFilters;
-  debug("in fetch route", req.body);
+  debug("in search fetch route", req.body);
 
-  let months = [];
-  for (const i in seasonReq) {
-    //season switch
-    switch (seasonReq[i]) {
-      case "winter":
-        months = months.concat(['"DEC"', '"JAN"', '"FEB"']);
-        break;
-      case "spring":
-        months = months.concat(['"MAR"', '"APR"', '"MAY"']);
-        break;
-      case "summer":
-        months = months.concat(['"JUN"', '"JUL"', '"AUG"']);
-        break;
-      case "fall":
-        months = months.concat(['"SEP"', '"OCT"', '"NOV"']);
-        break;
-      default:
-        if (months.length === 0) {
-          months = months.concat([
-            '"DEC"',
-            '"JAN"',
-            '"FEB"',
-            '"MAR"',
-            '"APR"',
-            '"MAY"',
-            '"JUN"',
-            '"JUL"',
-            '"AUG"',
-            '"SEP"',
-            '"OCT"',
-            '"NOV"',
-          ]);
-        }
-    }
+  const query = req.body.query;
+  const ingredients = req.body.ingredients;
+  const mealType = req.body.mealType;
+  const cuisine = req.body.cuisine;
+  const diet = req.body.diet;
+  const page = req.body.page;
+  const resultsPerPage = req.body.resultsPerPage;
+
+  let ingredientString = ``;
+  let typeString = ``;
+  let cuisineString = ``;
+  let queryString = ``;
+  let dietString = ``;
+
+  if (query.length > 0) {
+    queryString = `&query=${query.toLowerCase().replace(/ /g, "%20")}`;
   }
-  months[0] = `month=${months[0]}`;
-  const timeString = months.join(" OR month=");
-  let crimes = [];
-  for (const i in weights) {
-    if (weights[i] > 0) {
-      switch (i) {
-        case "assault":
-          crimes.push('"Assault (Non-domestic)"');
-          break;
-        case "bneStore":
-          crimes.push('"Break %26 Enter - Commercial"');
-          break;
-        case "bneHome":
-          crimes.push('"Break %26 Enter - Dwelling"');
-          break;
-        case "bneOther":
-          crimes.push('"Break %26 Enter - Other Premises"');
-          break;
-        case "robStore":
-          crimes.push('"Commercial Robbery"');
-          break;
-        case "robStreet":
-          crimes.push('"Street Robbery"');
-          break;
-        case "robFromCar":
-          crimes.push('"Theft FROM Vehicle"');
-          break;
-        case "robOfCar":
-          crimes.push('"Theft OF Vehicle"');
-          break;
-        case "violence":
-          crimes.push('"Violence Other (Non-domestic)"');
-          break;
-      }
-    }
+  if (ingredients.length > 0) {
+    ingredientString = `&includeIngredients=${ingredients
+      .join()
+      .toLowerCase()
+      .replace(/ /g, "%20")}`;
   }
-  crimes[0] = `category=${crimes[0]}`;
-  crimes = crimes.join(" OR category=");
-  const noGoodTerribleString = `(${crimes}) AND (${timeString})`;
-  // console.log(noGoodTerribleString);
+  if (mealType.length > 0) {
+    typeString = `&type=${mealType.replace(/ /g, "%20")}`;
+  }
+  if (cuisine.length > 0) {
+    cuisineString = `&cuisine=${cuisine.replace(/ /g, "%20")}`;
+  }
+  if (diet.length > 0) {
+    dietString = `&diet=${diet.replace(/ /g, "%20")}`;
+  }
+  const offset = (page - 1) * resultsPerPage;
+
+  const fetchString = `https://api.spoonacular.com/recipes/complexSearch?apiKey=${spoonAPIKey}${queryString}${ingredientString}&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true${typeString}${cuisineString}${dietString}&offset=${offset}&number=${resultsPerPage}`;
+
   try {
     // fetch request with SoQL query based on outcome of switch statement
-    const response = await fetch(
-      `https://data.calgary.ca/resource/78gh-n26t.json?$WHERE=${noGoodTerribleString} limit 100000`
-    );
-    const rawData = await response.json();
-    // console.log(rawData);
-    const mapResult = await applyMath(rawData, weights, true);
-    // console.log(mapResult);
-    res.send(mapResult);
+    const response = await fetch(fetchString);
+    const recipes = await response.json();
+
+    res.send(recipes);
   } catch (error) {
     debug(error);
     res.status(500).send(error);
   }
 });
 
+//pull up individual recipe
 router.post("/recipe", async (req, res) => {
-  const seasonReq = req.body.timeFilters;
-  const weights = req.body.weights;
-  const crimeReq = req.body.crimeFilters;
+  const id = req.body.id;
   debug("in fetch route", req.body);
-
-  let months = [];
-  for (const i in seasonReq) {
-    //season switch
-    switch (seasonReq[i]) {
-      case "winter":
-        months = months.concat(['"DEC"', '"JAN"', '"FEB"']);
-        break;
-      case "spring":
-        months = months.concat(['"MAR"', '"APR"', '"MAY"']);
-        break;
-      case "summer":
-        months = months.concat(['"JUN"', '"JUL"', '"AUG"']);
-        break;
-      case "fall":
-        months = months.concat(['"SEP"', '"OCT"', '"NOV"']);
-        break;
-      default:
-        if (months.length === 0) {
-          months = months.concat([
-            '"DEC"',
-            '"JAN"',
-            '"FEB"',
-            '"MAR"',
-            '"APR"',
-            '"MAY"',
-            '"JUN"',
-            '"JUL"',
-            '"AUG"',
-            '"SEP"',
-            '"OCT"',
-            '"NOV"',
-          ]);
-        }
-    }
-  }
-  months[0] = `month=${months[0]}`;
-  const timeString = months.join(" OR month=");
-  let crimes = [];
-  for (const i in weights) {
-    if (weights[i] > 0) {
-      switch (i) {
-        case "assault":
-          crimes.push('"Assault (Non-domestic)"');
-          break;
-        case "bneStore":
-          crimes.push('"Break %26 Enter - Commercial"');
-          break;
-        case "bneHome":
-          crimes.push('"Break %26 Enter - Dwelling"');
-          break;
-        case "bneOther":
-          crimes.push('"Break %26 Enter - Other Premises"');
-          break;
-        case "robStore":
-          crimes.push('"Commercial Robbery"');
-          break;
-        case "robStreet":
-          crimes.push('"Street Robbery"');
-          break;
-        case "robFromCar":
-          crimes.push('"Theft FROM Vehicle"');
-          break;
-        case "robOfCar":
-          crimes.push('"Theft OF Vehicle"');
-          break;
-        case "violence":
-          crimes.push('"Violence Other (Non-domestic)"');
-          break;
-      }
-    }
-  }
-  crimes[0] = `category=${crimes[0]}`;
-  crimes = crimes.join(" OR category=");
-  const noGoodTerribleString = `(${crimes}) AND (${timeString})`;
-  // console.log(noGoodTerribleString);
   try {
-    // fetch request with SoQL query based on outcome of switch statement
     const response = await fetch(
-      `https://data.calgary.ca/resource/78gh-n26t.json?$WHERE=${noGoodTerribleString} limit 100000`
+      `https://api.spoonacular.com/recipes/${id}/information?apiKey=${spoonAPIKey}`
     );
-    const rawData = await response.json();
-    // console.log(rawData);
-    const mapResult = await applyMath(rawData, weights, true);
-    // console.log(mapResult);
-    res.send(mapResult);
+    const recipe = await response.json();
+
+    res.send(recipe);
   } catch (error) {
     debug(error);
     res.status(500).send(error);

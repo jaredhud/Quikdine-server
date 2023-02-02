@@ -2,8 +2,8 @@ import express from "express";
 import myConfig from "dotenv";
 import DEBUG from "debug";
 
-import userRouter from "./routes/userRouter.js";
-import spoonacularRouter from "./routes/spoonacularFetches";
+// import userRouter from "./routes/userRouter.js";
+import spoonacularRouter from "./routes/spoonacularFetches.js";
 
 myConfig.config();
 export const debug = DEBUG("server:routes");
@@ -13,7 +13,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.static("build"));
-app.use("/api/user", userRouter);
+// app.use("/api/user", userRouter);
 app.use("/api/spoonacular", spoonacularRouter);
 
 app.get("/test", (req, res) => {
