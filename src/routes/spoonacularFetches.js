@@ -54,6 +54,7 @@ router.post("/search", async (req, res) => {
     console.log(fetchString);
     // const response = await fetch(fetchString);
     // const recipes = await response.json();
+    // res.send(recipes);
 
     res.send(placeholderRecipes);
   } catch (error) {
