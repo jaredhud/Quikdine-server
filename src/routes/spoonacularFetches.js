@@ -80,3 +80,26 @@ router.post("/recipe", async (req, res) => {
   }
 });
 export default router;
+
+//
+router.post("/recipebulk", async (req, res) => {
+  debug("in fetch route", req.body);
+  const ids = req.body.selectedRecipesList;
+  let idsString = `&ids=${ids.join()}`;
+  console.log(idsString);
+  try {
+    const response = await fetch(
+      `https://api.spoonacular.com/recipes/informationBulk?apiKey=${spoonAPIKey}${idsString}`
+    );
+    console.log(
+      `https://api.spoonacular.com/recipes/informationBulk?apiKey=${spoonAPIKey}${idsString}`
+    );
+    // recipes/informationBulk?ids=715538,716429
+    const recipe = await response.json();
+
+    res.send(recipe);
+  } catch (error) {
+    debug(error);
+    res.status(500).send(error);
+  }
+});
