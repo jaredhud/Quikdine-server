@@ -2,8 +2,13 @@ import { Router } from "express";
 import { debug } from "../server.js";
 import myConfig from "dotenv";
 import fetch from "node-fetch";
+import fs from "fs";
 
-import { placeholderRecipes } from "../../placeholderRecipes.js";
+import {
+  recipesSearch,
+  bulkRecipes,
+  recipeResult,
+} from "../../placeholderRecipes.js";
 
 myConfig.config();
 const router = Router();
@@ -11,7 +16,7 @@ const spoonAPIKey = process.env.SPOONACULAR_API_KEY;
 
 //pull up array of recipes
 router.post("/search", async (req, res) => {
-  debug("in search fetch route", req.body);
+  debug("in search recipes fetch route", req.body);
 
   const query = req.body.query;
   const ingredients = req.body.ingredientList;
@@ -56,7 +61,7 @@ router.post("/search", async (req, res) => {
     // const recipes = await response.json();
     // res.send(recipes);
 
-    res.send(placeholderRecipes);
+    res.send(recipesSearch);
   } catch (error) {
     debug(error);
     res.status(500).send(error);
@@ -65,15 +70,16 @@ router.post("/search", async (req, res) => {
 
 //pull up individual recipe
 router.post("/recipe", async (req, res) => {
+  console.log("f");
+  debug("in recipe fetch route", req.body);
   const id = req.body.id;
-  debug("in fetch route", req.body);
   try {
-    const response = await fetch(
-      `https://api.spoonacular.com/recipes/${id}/information?apiKey=${spoonAPIKey}`
-    );
-    const recipe = await response.json();
+    const fetchString = `https://api.spoonacular.com/recipes/${id}/information?apiKey=${spoonAPIKey}`;
+    // const response = await fetch(fetchString);
+    // const recipe = await response.json();
+    // res.send(recipe);
 
-    res.send(recipe);
+    res.send(recipeResult);
   } catch (error) {
     debug(error);
     res.status(500).send(error);
@@ -83,21 +89,18 @@ export default router;
 
 //
 router.post("/recipebulk", async (req, res) => {
-  debug("in fetch route", req.body);
+  debug("in bulk recipe fetch route", req.body);
   const ids = req.body.selectedRecipesList;
   let idsString = `&ids=${ids.join()}`;
   console.log(idsString);
   try {
-    const response = await fetch(
-      `https://api.spoonacular.com/recipes/informationBulk?apiKey=${spoonAPIKey}${idsString}`
-    );
-    console.log(
-      `https://api.spoonacular.com/recipes/informationBulk?apiKey=${spoonAPIKey}${idsString}`
-    );
-    // recipes/informationBulk?ids=715538,716429
-    const recipe = await response.json();
+    const fetchString = `https://api.spoonacular.com/recipes/informationBulk?apiKey=${spoonAPIKey}${idsString}`;
+    console.log(fetchString);
+    // const response = await fetch(fetchString);
+    // const recipe = await response.json();
+    // res.send(recipe);
 
-    res.send(recipe);
+    res.send(bulkRecipes);
   } catch (error) {
     debug(error);
     res.status(500).send(error);
