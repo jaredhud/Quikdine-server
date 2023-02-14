@@ -9,7 +9,7 @@ const router = Router();
 
 router.post("/recipients", async (req, res) => {
   debug("in recipients fetch route", req.body);
-  const userId = req.body.ids;
+  const userIds = req.body.userIds;
   const recipients = req.body.recipients;
   const eventID = req.body.eventID;
   try {
@@ -18,15 +18,16 @@ router.post("/recipients", async (req, res) => {
       console.log(recipients[i]);
       const msg = {
         to: `${recipients[i]}`,
-        from: "test@example.com",
+        from: "jaredhud@hotmail.com",
         subject: "QuikDine Event",
-        text: `http://localhost:3000/?userId=${userId[i]}&eventId=${eventID}`,
+        text: `http://localhost:3000/?userId=${userIds[i]}&eventId=${eventID}`,
         html: "<strong>and easy to do anywhere, even with Node.js</strong>",
       };
       sgMail.send(msg);
     }
 
     res.send({ msg: "E-MAILS SENT" });
+    console.log("sent");
   } catch (error) {
     debug(error);
     res.status(500).send(error);
