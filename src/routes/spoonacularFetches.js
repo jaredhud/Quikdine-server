@@ -85,7 +85,6 @@ router.post("/recipe", async (req, res) => {
     res.status(500).send(error);
   }
 });
-export default router;
 
 //
 router.post("/recipebulk", async (req, res) => {
@@ -106,3 +105,5 @@ router.post("/recipebulk", async (req, res) => {
     res.status(500).send(error);
   }
 });
+
+export default router;
