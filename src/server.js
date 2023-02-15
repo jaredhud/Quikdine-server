@@ -5,6 +5,7 @@ import DEBUG from "debug";
 // import userRouter from "./routes/userRouter.js";
 import spoonacularRouter from "./routes/spoonacularFetches.js";
 import emailRouter from "./routes/sendgridFetches.js";
+import votingRouter from "./routes/firebaseFetches.js"
 
 myConfig.config();
 export const debug = DEBUG("server:routes");
@@ -17,6 +18,7 @@ app.use(express.static("build"));
 // app.use("/api/user", userRouter);
 app.use("/api/spoonacular", spoonacularRouter);
 app.use("/api/email", emailRouter);
+app.use("/api/voting", votingRouter);
 
 app.use("*", (req, res) => {
   res.sendFile(path.resolve("build", "index.html"));
