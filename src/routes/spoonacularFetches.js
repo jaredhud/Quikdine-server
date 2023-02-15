@@ -18,7 +18,7 @@ const spoonAPIKey = process.env.SPOONACULAR_API_KEY;
 router.post("/search", async (req, res) => {
   debug("in search recipes fetch route", req.body);
 
-  const query = req.body.query;
+  const searchQuery = req.body.searchQuery;
   const ingredients = req.body.ingredientList;
   const mealType = req.body.mealType;
   const cuisine = req.body.cuisine;
@@ -29,11 +29,13 @@ router.post("/search", async (req, res) => {
   let ingredientString = ``;
   let typeString = ``;
   let cuisineString = ``;
-  let queryString = ``;
+  let searchQueryString = ``;
   let dietString = ``;
 
-  if (query.length > 0) {
-    queryString = `&query=${query.toLowerCase().replace(/ /g, "%20")}`;
+  if (searchQuery.length > 0) {
+    searchQueryString = `&query=${searchQuery
+      .toLowerCase()
+      .replace(/ /g, "%20")}`;
   }
   if (ingredients.length > 0) {
     ingredientString = `&includeIngredients=${ingredients
@@ -52,7 +54,7 @@ router.post("/search", async (req, res) => {
   }
   const offset = (page - 1) * resultsPerPage;
 
-  const fetchString = `https://api.spoonacular.com/recipes/complexSearch?apiKey=${spoonAPIKey}${queryString}${ingredientString}&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true${typeString}${cuisineString}${dietString}&offset=${offset}&number=${resultsPerPage}`;
+  const fetchString = `https://api.spoonacular.com/recipes/complexSearch?apiKey=${spoonAPIKey}${searchQueryString}${ingredientString}&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true${typeString}${cuisineString}${dietString}&offset=${offset}&number=${resultsPerPage}`;
 
   try {
     // fetch request with SoQL query based on outcome of switch statement
