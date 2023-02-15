@@ -75,9 +75,11 @@ router.post("/recipe", async (req, res) => {
   const id = req.body.id;
   try {
     const fetchString = `https://api.spoonacular.com/recipes/${id}/information?apiKey=${spoonAPIKey}`;
+    console.log(fetchString);
+
     // const response = await fetch(fetchString);
     // const recipe = await response.json();
-    // res.send(recipe);
+    res.send(recipe);
 
     res.send(recipeResult);
   } catch (error) {
