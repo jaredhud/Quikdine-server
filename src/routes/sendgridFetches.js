@@ -18,7 +18,7 @@ router.post("/recipients", async (req, res) => {
       console.log(recipients[i]);
       const msg = {
         to: `${recipients[i]}`,
-        from: "jaredhud@hotmail.com",
+        from: "kshitija.0811@gmail.com",
         subject: "QuikDine Event",
         text: `http://localhost:3000/?userId=${userIds[i]}&eventId=${eventID}`,
         html: "<strong>and easy to do anywhere, even with Node.js</strong>",
