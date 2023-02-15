@@ -79,7 +79,7 @@ router.post("/recipe", async (req, res) => {
 
     // const response = await fetch(fetchString);
     // const recipe = await response.json();
-    res.send(recipe);
+    // res.send(recipe);
 
     res.send(recipeResult);
   } catch (error) {
