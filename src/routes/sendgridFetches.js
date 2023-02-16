@@ -20,7 +20,7 @@ router.post("/recipients", async (req, res) => {
         to: `${recipients[i]}`,
         from: "kshitija.0811@gmail.com",
         subject: "QuikDine Event",
-        text: `http://localhost:3000/?userId=${userIds[i]}&eventId=${eventID}`,
+        text: `http://localhost:3000/?userId=jared123&eventId=el8iAXLAHcoQN3fuJX0l`,
         html: "<strong>and easy to do anywhere, even with Node.js</strong>",
       };
       sgMail.send(msg);
