@@ -3,14 +3,25 @@ import { debug } from "../server.js";
 import myConfig from "dotenv";
 import { auth, db } from "../../firebase.js";
 import fetch from "node-fetch";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore/lite";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore/lite";
 
 myConfig.config();
 const router = Router();
 
 router.post("/login", async (req, res) => {
-  debug("in Firebase fetch route", req.body);
+  debug("in Firebase login route", req.body);
   const submittedEmail = req.body.email;
   const password = req.body.password;
   try {
@@ -59,12 +70,51 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  debug("in Firebase fetch route", req.body);
-  const userId = req.body.userIds;
-  const eventID = req.body.eventID;
+  debug("in Firebase registration route", req.body);
+  const submittedEmail = req.body.email;
+  const password = req.body.password;
+  const pantryList = req.body.pantryList;
+  const selectedRecipesList = req.body.selectedRecipesList;
   try {
-    res.send({ msg: "Added Recipes" });
-    console.log("Recipes linked to event");
+    const data = await createUserWithEmailAndPassword(
+      auth,
+      submittedEmail,
+      password
+    );
+
+    let userId = Math.floor(Math.random() * Math.random() * Date.now());
+    console.log(userId);
+
+    const email = data.user.email;
+
+    const userdb = await getDoc(doc(db, "Users", email));
+    if (userdb.exists()) {
+      userId = userdb.data().UserId;
+    }
+
+    await setDoc(doc(db, "Users", email), {
+      Events: [],
+      FavRecipes: [],
+      UserId: userId,
+      Pantry: pantryList,
+    });
+
+    const eventdb = await addDoc(collection(db, "Events"), {
+      AddedRecipes: selectedRecipesList,
+      Votes: new Array(selectedRecipesList.length).fill(0),
+      UserIds: [userId],
+      Emails: [email],
+    });
+    const eventId = eventdb.id;
+
+    await updateDoc(doc(db, "Users", email), {
+      Events: arrayUnion(eventId),
+    });
+
+    const inviteUserIds = [userId];
+    const recipients = [email];
+
+    res.send({ msg: "Success!", email, eventId, inviteUserIds, recipients });
   } catch (error) {
     debug(error);
     res.status(500).send(error);
