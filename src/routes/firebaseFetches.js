@@ -163,18 +163,18 @@ router.post("/addRecipe", async (req, res) => {
   }
 });
 
-router.post("/addEvent", async (req, res) => {
-  debug("in Firebase fetch route", req.body);
-  const userId = req.body.userIds;
-  const eventId = req.body.eventId;
-  try {
-    res.status(200).send({ msg: "Added Recipes" });
-    console.log("Recipes linked to event");
-  } catch (error) {
-    debug(error);
-    res.status(500).send(error);
-  }
-});
+// router.post("/addEvent", async (req, res) => {
+//   debug("in Firebase fetch route", req.body);
+//   const userId = req.body.userIds;
+//   const eventId = req.body.eventId;
+//   try {
+//     res.status(200).send({ msg: "Added Recipes" });
+//     console.log("Recipes linked to event");
+//   } catch (error) {
+//     debug(error);
+//     res.status(500).send(error);
+//   }
+// });
 
 router.post("/addRecipients", async (req, res) => {
   debug("in Firebase add recipient route", req.body);
