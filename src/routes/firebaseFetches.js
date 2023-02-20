@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { debug } from "../server.js";
 import myConfig from "dotenv";
-import { auth, db } from "../../firebase.js";
+import { db } from "../../firebase.js";
 import fetch from "node-fetch";
 import {
   createUserWithEmailAndPassword,
+  getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import {
@@ -19,6 +20,7 @@ import {
 
 myConfig.config();
 const router = Router();
+const auth = getAuth();
 
 router.post("/login", async (req, res) => {
   debug("in Firebase login route", req.body);
@@ -53,7 +55,7 @@ router.post("/login", async (req, res) => {
     // set recipients from saved event data
     const recipients = eventdb.data().Emails;
 
-    res.send({
+    res.status(200).send({
       msg: "Logged In",
       eventId,
       email,
@@ -101,7 +103,8 @@ router.post("/register", async (req, res) => {
 
     const eventdb = await addDoc(collection(db, "Events"), {
       AddedRecipes: selectedRecipesList,
-      Votes: new Array(selectedRecipesList.length).fill(0),
+      VotesCount: new Array(selectedRecipesList.length).fill(0),
+      UserVoteIndex: [-1],
       UserIds: [userId],
       Emails: [email],
     });
@@ -114,7 +117,9 @@ router.post("/register", async (req, res) => {
     const inviteUserIds = [userId];
     const recipients = [email];
 
-    res.send({ msg: "Success!", email, eventId, inviteUserIds, recipients });
+    res
+      .status(200)
+      .send({ msg: "Success!", email, eventId, inviteUserIds, recipients });
   } catch (error) {
     debug(error);
     res.status(500).send(error);
@@ -122,12 +127,15 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/addPantry", async (req, res) => {
-  debug("in Firebase fetch route", req.body);
-  const userId = req.body.userIds;
-  const eventID = req.body.eventID;
+  debug("in Firebase pantry update route", req.body);
+  const email = req.body.email;
+  const pantryList = req.body.pantryList;
   try {
-    res.send({ msg: "Added Recipes" });
-    console.log("Recipes linked to event");
+    updateDoc(doc(db, "Users", email), {
+      Pantry: pantryList,
+    });
+    res.status(200).send({ msg: "Pantry Updated" });
+    console.log("Pantry Updated");
   } catch (error) {
     debug(error);
     res.status(500).send(error);
@@ -135,11 +143,20 @@ router.post("/addPantry", async (req, res) => {
 });
 
 router.post("/addRecipe", async (req, res) => {
-  debug("in Firebase fetch route", req.body);
-  const userId = req.body.userIds;
-  const eventID = req.body.eventID;
+  debug("in Firebase addRecipe route", req.body);
+  const selectedRecipesList = req.body.selectedRecipesList;
+  const eventId = req.body.eventId;
+
   try {
-    res.send({ msg: "Added Recipes" });
+    updateDoc(doc(db, "Events", eventId), {
+      AddedRecipes: selectedRecipesList,
+      VotesCount: new Array(selectedRecipesList.length).fill(0),
+    });
+    res.status(200).send({
+      msg: `Added Recipe: ${
+        selectedRecipesList[selectedRecipesList.length - 1]
+      }`,
+    });
     console.log("Recipes linked to event");
   } catch (error) {
     debug(error);
@@ -150,9 +167,9 @@ router.post("/addRecipe", async (req, res) => {
 router.post("/addEvent", async (req, res) => {
   debug("in Firebase fetch route", req.body);
   const userId = req.body.userIds;
-  const eventID = req.body.eventID;
+  const eventId = req.body.eventId;
   try {
-    res.send({ msg: "Added Recipes" });
+    res.status(200).send({ msg: "Added Recipes" });
     console.log("Recipes linked to event");
   } catch (error) {
     debug(error);
@@ -161,12 +178,52 @@ router.post("/addEvent", async (req, res) => {
 });
 
 router.post("/addRecipients", async (req, res) => {
-  debug("in Firebase fetch route", req.body);
-  const userId = req.body.userIds;
-  const eventID = req.body.eventID;
+  debug("in Firebase add recipient route", req.body);
+  const recipients = req.body.recipients;
+  const eventId = req.body.eventId;
+  const inviteUserIds = req.body.inviteUserIds;
   try {
-    res.send({ msg: "Added Recipes" });
-    console.log("Recipes linked to event");
+    //a recipient has been removed
+    if (recipients.length === inviteUserIds.length) {
+      updateDoc(doc(db, "Events", eventId), {
+        Emails: recipients,
+        UserIds: inviteUserIds,
+        UserVoteIndex: new Array(recipients.length).fill(-1),
+      });
+    }
+    // a recipient has been added
+    else {
+      const userdb = await getDoc(
+        doc(db, "Users", recipients[recipients.length - 1])
+      );
+      // pull existing user's id
+      if (userdb.exists()) {
+        inviteUserIds.push(userdb.data().UserId);
+      }
+      // add new user attached to email
+      else {
+        const newUserId = Math.floor(
+          Math.random() * Math.random() * Date.now()
+        );
+
+        await setDoc(doc(db, "Users", recipients[recipients.length - 1]), {
+          Events: [],
+          FavRecipes: [],
+          UserId: newUserId,
+          Pantry: [],
+        });
+        inviteUserIds.push(newUserId);
+      }
+
+      updateDoc(doc(db, "Events", eventId), {
+        Emails: recipients,
+        UserIds: inviteUserIds,
+        UserVoteIndex: new Array(recipients.length).fill(-1),
+      });
+    }
+
+    res.status(200).send({ msg: "Updated Recipients", inviteUserIds });
+    console.log(`Updated recipients of ${eventId}`);
   } catch (error) {
     debug(error);
     res.status(500).send(error);
