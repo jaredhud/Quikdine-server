@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { debug } from "../server.js";
 import myConfig from "dotenv";
-import { db } from "../../firebase.js";
+import { auth, db } from "../../firebase.js";
 import fetch from "node-fetch";
 import {
   createUserWithEmailAndPassword,
@@ -20,7 +20,6 @@ import {
 
 myConfig.config();
 const router = Router();
-const auth = getAuth();
 
 router.post("/login", async (req, res) => {
   debug("in Firebase login route", req.body);
