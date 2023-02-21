@@ -59,11 +59,11 @@ router.post("/search", async (req, res) => {
   try {
     // fetch request with SoQL query based on outcome of switch statement
     console.log(fetchString);
-    const response = await fetch(fetchString);
-    const recipes = await response.json();
-    res.send(recipes);
+    // const response = await fetch(fetchString);
+    // const recipes = await response.json();
+    // res.send(recipes);
 
-    // res.send(recipesSearch);
+    res.send(recipesSearch);
   } catch (error) {
     debug(error);
     res.status(500).send(error);
@@ -78,12 +78,11 @@ router.post("/recipe", async (req, res) => {
   try {
     const fetchString = `https://api.spoonacular.com/recipes/${id}/information?apiKey=${spoonAPIKey}`;
     console.log(fetchString);
-    console.log("vjsg");
-    const response = await fetch(fetchString);
-    const recipe = await response.json();
-    res.send(recipe);
+    // const response = await fetch(fetchString);
+    // const recipe = await response.json();
+    // res.send(recipe);
 
-    // res.send(recipeResult);
+    res.send(recipeResult);
   } catch (error) {
     debug(error);
     res.status(500).send(error);
@@ -99,11 +98,11 @@ router.post("/recipebulk", async (req, res) => {
   try {
     const fetchString = `https://api.spoonacular.com/recipes/informationBulk?apiKey=${spoonAPIKey}${idsString}`;
     console.log(fetchString);
-    const response = await fetch(fetchString);
-    const recipe = await response.json();
-    res.send(recipe);
+    // const response = await fetch(fetchString);
+    // const recipe = await response.json();
+    // res.send(recipe);
 
-    // res.send(bulkRecipes);
+    res.send(bulkRecipes);
   } catch (error) {
     debug(error);
     res.status(500).send(error);

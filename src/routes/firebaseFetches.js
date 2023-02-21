@@ -43,14 +43,14 @@ router.post("/login", async (req, res) => {
     const pantryList = userdb.data().Pantry;
 
     // set favorites from stored user data
-    const favoritesList = user.data().FavRecipes;
+    const favoritesList = userdb.data().FavRecipes;
 
     // retrieve event info
     const eventdb = await getDoc(doc(db, "Events", eventId));
 
     // set recipe list from saved event data
-    const selectedRecipesList = eventdb.data().AddedRecipes;
-
+    const selectedRecipesList = eventdb.data()?.AddedRecipes || [];
+    console.log(selectedRecipesList);
     // set invited users from saved event data
     const inviteUserIds = eventdb.data().UserIds;
 
