@@ -43,7 +43,7 @@ router.post("/login", async (req, res) => {
     const pantryList = userdb.data().Pantry;
 
     // set favorites from stored user data
-    const favoritesList = user.data().FavRecipes;
+    const favoritesList = userdb.data().FavRecipes;
 
     // retrieve event info
     const eventdb = await getDoc(doc(db, "Events", eventId));
@@ -165,6 +165,7 @@ router.post("/addRecipe", async (req, res) => {
   debug("in Firebase addRecipe route", req.body);
   const selectedRecipesList = req.body.selectedRecipesList;
   const eventId = req.body.eventId;
+  console.log(selectedRecipesList);
 
   try {
     updateDoc(doc(db, "Events", eventId), {
