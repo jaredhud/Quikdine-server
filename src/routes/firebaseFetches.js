@@ -163,18 +163,39 @@ router.post("/addRecipe", async (req, res) => {
   }
 });
 
-// router.post("/addEvent", async (req, res) => {
-//   debug("in Firebase fetch route", req.body);
-//   const userId = req.body.userIds;
-//   const eventId = req.body.eventId;
-//   try {
-//     res.status(200).send({ msg: "Added Recipes" });
-//     console.log("Recipes linked to event");
-//   } catch (error) {
-//     debug(error);
-//     res.status(500).send(error);
-//   }
-// });
+router.post("/getEvents", async (req, res) => {
+  debug("in Firebase fetch route", req.body);
+  const email = req.body.email;
+  try {
+    const userdb = await getDoc(doc(db, "Users", email));
+    const eventList = userdb.data().Events;
+    eventList.reverse();
+
+    res.status(200).send({ msg: "Received Events List", eventList });
+    console.log("Sent Events List");
+  } catch (error) {
+    debug(error);
+    res.status(500).send(error);
+  }
+});
+router.post("/getEvent", async (req, res) => {
+  debug("in Firebase fetch route", req.body);
+  const eventId = req.body.eventToView;
+  try {
+    const eventdb = await getDoc(doc(db, "Events", eventId));
+    const votes = eventdb.data().VotesCount;
+    const recipes = eventdb.data().AddedRecipes;
+    const participants = eventdb.data().Emails;
+
+    res
+      .status(200)
+      .send({ msg: "Received Events List", votes, recipes, participants });
+    console.log("Sent Events List");
+  } catch (error) {
+    debug(error);
+    res.status(500).send(error);
+  }
+});
 
 router.post("/addRecipients", async (req, res) => {
   debug("in Firebase add recipient route", req.body);
