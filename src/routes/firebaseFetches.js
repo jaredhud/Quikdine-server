@@ -42,6 +42,9 @@ router.post("/login", async (req, res) => {
     // set pantry from stored user data
     const pantryList = userdb.data().Pantry;
 
+    // set favorites from stored user data
+    const favoritesList = user.data().FavRecipes;
+
     // retrieve event info
     const eventdb = await getDoc(doc(db, "Events", eventId));
 
@@ -62,6 +65,7 @@ router.post("/login", async (req, res) => {
       selectedRecipesList,
       recipients,
       inviteUserIds,
+      favoritesList,
     });
     console.log("Successfully logged in");
   } catch (error) {
@@ -141,6 +145,22 @@ router.post("/addPantry", async (req, res) => {
   }
 });
 
+router.post("/addFavorites", async (req, res) => {
+  debug("in Firebase favorites update route", req.body);
+  const email = req.body.email;
+  const favoritesList = req.body.favoritesList;
+  try {
+    updateDoc(doc(db, "Users", email), {
+      FavRecipes: favoritesList,
+    });
+    res.status(200).send({ msg: "Favorites Updated" });
+    console.log("Favorites Updated");
+  } catch (error) {
+    debug(error);
+    res.status(500).send(error);
+  }
+});
+
 router.post("/addRecipe", async (req, res) => {
   debug("in Firebase addRecipe route", req.body);
   const selectedRecipesList = req.body.selectedRecipesList;
@@ -164,7 +184,7 @@ router.post("/addRecipe", async (req, res) => {
 });
 
 router.post("/getEvents", async (req, res) => {
-  debug("in Firebase fetch route", req.body);
+  debug("in get events fetch route", req.body);
   const email = req.body.email;
   try {
     const userdb = await getDoc(doc(db, "Users", email));
@@ -179,17 +199,24 @@ router.post("/getEvents", async (req, res) => {
   }
 });
 router.post("/getEvent", async (req, res) => {
-  debug("in Firebase fetch route", req.body);
+  debug("in get event fetch route", req.body);
   const eventId = req.body.eventToView;
   try {
     const eventdb = await getDoc(doc(db, "Events", eventId));
     const votes = eventdb.data().VotesCount;
     const recipes = eventdb.data().AddedRecipes;
     const participants = eventdb.data().Emails;
+    const userIds = eventdb.data().UserIds;
+    const userVoteIndex = eventdb.data().UserVoteIndex;
 
-    res
-      .status(200)
-      .send({ msg: "Received Events List", votes, recipes, participants });
+    res.status(200).send({
+      msg: "Received Events List",
+      votes,
+      recipes,
+      participants,
+      userIds,
+      userVoteIndex,
+    });
     console.log("Sent Events List");
   } catch (error) {
     debug(error);
@@ -244,6 +271,24 @@ router.post("/addRecipients", async (req, res) => {
 
     res.status(200).send({ msg: "Updated Recipients", inviteUserIds });
     console.log(`Updated recipients of ${eventId}`);
+  } catch (error) {
+    debug(error);
+    res.status(500).send(error);
+  }
+});
+
+router.post("/vote", async (req, res) => {
+  debug("in Firebase vote update route", req.body);
+  const userVoteIndex = req.body.userVoteIndex;
+  const eventId = req.body.eventId;
+  const votesCount = req.body.votesCount;
+  try {
+    updateDoc(doc(db, "Events", eventId), {
+      VotesCount: votesCount,
+      UserVoteIndex: userVoteIndex,
+    });
+    res.status(200).send({ msg: "Vote recorded" });
+    console.log("Vote log updated");
   } catch (error) {
     debug(error);
     res.status(500).send(error);
