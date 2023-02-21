@@ -49,8 +49,8 @@ router.post("/login", async (req, res) => {
     const eventdb = await getDoc(doc(db, "Events", eventId));
 
     // set recipe list from saved event data
-    const selectedRecipesList = eventdb.data().AddedRecipes;
-
+    const selectedRecipesList = eventdb.data()?.AddedRecipes || [];
+    console.log(selectedRecipesList);
     // set invited users from saved event data
     const inviteUserIds = eventdb.data().UserIds;
 
