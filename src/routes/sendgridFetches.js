@@ -37,7 +37,7 @@ router.post("/sendmail", async (req, res) => {
         to: `${emailaddresses[i]}`,
         from: "romell.bermundo@gmail.com",
         subject: "QuikDine Event",
-        html: `http://localhost:3000/vote?userId=${userIds[i]}&eventId=${eventId}`,
+        html: `http://10.44.22.41:3000/vote?userId=${userIds[i]}&eventId=${eventId}`,
       };
       sgMail.send(msg);
     }
