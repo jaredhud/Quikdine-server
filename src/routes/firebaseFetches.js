@@ -5,7 +5,6 @@ import { auth, db } from "../../firebase.js";
 import fetch from "node-fetch";
 import {
   createUserWithEmailAndPassword,
-  getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import {

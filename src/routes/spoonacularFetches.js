@@ -59,11 +59,41 @@ router.post("/search", async (req, res) => {
   try {
     // fetch request with SoQL query based on outcome of switch statement
     console.log(fetchString);
-    // const response = await fetch(fetchString);
-    // const recipes = await response.json();
-    // res.send(recipes);
+    if (
+      fetchString ===
+      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=0&number=10"
+    ) {
+      // empty pantry
+      res.send(recipesSearch);
+    } else if (
+      fetchString ===
+      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=cheese,ground%20beef&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=0&number=10"
+    ) {
+      // ground beef and cheese
+      res.send(recipesSearch);
+    } else if (
+      fetchString ===
+      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=salmon,cheese,tomato,ground%20beef&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=0&number=10"
+    ) {
+      //
+      res.send(recipesSearch);
+    } else if (
+      fetchString ===
+      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=salmon,cheese,tomato,ground%20beef&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=10&number=10"
+    ) {
+      res.send(recipesSearch);
+    } else if (
+      fetchString ===
+      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=salmon,cheese,tomato,ground%20beef&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=20&number=10"
+    ) {
+      res.send(recipesSearch);
+    } else {
+      // const response = await fetch(fetchString);
+      // const recipes = await response.json();
+      // res.send(recipes);
 
-    res.send(recipesSearch);
+      res.send(recipesSearch);
+    }
   } catch (error) {
     debug(error);
     res.status(500).send(error);
@@ -72,7 +102,6 @@ router.post("/search", async (req, res) => {
 
 //pull up individual recipe
 router.post("/recipe", async (req, res) => {
-  console.log("f");
   debug("in recipe fetch route", req.body);
   const id = req.body.id;
   try {
