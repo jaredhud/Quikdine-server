@@ -82,19 +82,19 @@ router.post("/search", async (req, res) => {
       res.send(beefNcheese);
     } else if (
       fetchString ===
-      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=cheese,beef,salmon,tomato&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=0&number=10"
+      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=cheese,beef,salmon,plum%20tomato&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=0&number=10"
     ) {
       // page 1 cheese, beef, salmon, and tomato
       res.send(pg1CheeseBeefSalmonTomato);
     } else if (
       fetchString ===
-      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=cheese,beef,salmon,tomato&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=10&number=10"
+      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=cheese,beef,salmon,plum%20tomato&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=10&number=10"
     ) {
       // page 2 cheese, beef, salmon, and tomato
       res.send(pg2CheeseBeefSalmonTomato);
     } else if (
       fetchString ===
-      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=cheese,beef,salmon,tomato&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=20&number=10"
+      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=cheese,beef,salmon,plum%20tomato&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=20&number=10"
     ) {
       // page 3 cheese, beef, salmon, and tomato
       res.send(pg3CheeseBeefSalmonTomato);
