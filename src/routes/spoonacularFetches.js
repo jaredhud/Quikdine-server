@@ -16,6 +16,7 @@ import {
   mainCourseCheeseSalmon,
   individualFetaBurger,
   listFetaSalmonSalmonNoodlesFetaBurgers,
+  listMeatballSlidersFetaSalmonSalmonPasta,
 } from "../../placeholderRecipes.js";
 
 myConfig.config();
@@ -155,6 +156,11 @@ router.post("/recipebulk", async (req, res) => {
       "https://api.spoonacular.com/recipes/informationBulk?apiKey=332d07c641fd4c11af3cf76f666e3666&ids=642619,660370,642695"
     ) {
       res.send(listFetaSalmonSalmonNoodlesFetaBurgers);
+    } else if (
+      fetchString ===
+      "https://api.spoonacular.com/recipes/informationBulk?apiKey=332d07c641fd4c11af3cf76f666e3666&ids=651341,642619,660382"
+    ) {
+      res.send(listMeatballSlidersFetaSalmonSalmonPasta);
     } else {
       const response = await fetch(fetchString);
       const recipe = await response.json();
