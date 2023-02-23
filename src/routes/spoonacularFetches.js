@@ -8,6 +8,14 @@ import {
   recipesSearch,
   bulkRecipes,
   recipeResult,
+  emptyPantry,
+  beefNcheese,
+  pg1CheeseBeefSalmonTomato,
+  pg2CheeseBeefSalmonTomato,
+  pg3CheeseBeefSalmonTomato,
+  mainCourseCheeseSalmon,
+  individualFetaBurger,
+  listFetaSalmonSalmonNoodlesFetaBurgers,
 } from "../../placeholderRecipes.js";
 
 myConfig.config();
@@ -64,35 +72,43 @@ router.post("/search", async (req, res) => {
       "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=0&number=10"
     ) {
       // empty pantry
-      res.send(recipesSearch);
+      res.send(emptyPantry);
     } else if (
       fetchString ===
-      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=cheese,ground%20beef&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=0&number=10"
+      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=cheese,beef&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=0&number=10"
     ) {
       // ground beef and cheese
-      res.send(recipesSearch);
+      res.send(beefNcheese);
     } else if (
       fetchString ===
-      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=salmon,cheese,tomato,ground%20beef&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=0&number=10"
+      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=cheese,beef,salmon,tomato&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=0&number=10"
     ) {
-      //
-      res.send(recipesSearch);
+      // page 1 cheese, beef, salmon, and tomato
+      res.send(pg1CheeseBeefSalmonTomato);
     } else if (
       fetchString ===
-      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=salmon,cheese,tomato,ground%20beef&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=10&number=10"
+      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=cheese,beef,salmon,tomato&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=10&number=10"
     ) {
-      res.send(recipesSearch);
+      // page 2 cheese, beef, salmon, and tomato
+      res.send(pg2CheeseBeefSalmonTomato);
     } else if (
       fetchString ===
-      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=salmon,cheese,tomato,ground%20beef&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=20&number=10"
+      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=cheese,beef,salmon,tomato&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&offset=20&number=10"
     ) {
-      res.send(recipesSearch);
+      // page 3 cheese, beef, salmon, and tomato
+      res.send(pg3CheeseBeefSalmonTomato);
+    } else if (
+      fetchString ===
+      "https://api.spoonacular.com/recipes/complexSearch?apiKey=332d07c641fd4c11af3cf76f666e3666&includeIngredients=cheese,salmon&sort=max-used-ingredients&addRecipeInformation=true&addRecipeNutrition=false&fillIngredients=true&type=main%20course&offset=0&number=10"
+    ) {
+      // Advanced Search: Cheese Salmon Main Course
+      res.send(mainCourseCheeseSalmon);
     } else {
-      // const response = await fetch(fetchString);
-      // const recipes = await response.json();
-      // res.send(recipes);
+      const response = await fetch(fetchString);
+      const recipes = await response.json();
+      res.send(recipes);
 
-      res.send(recipesSearch);
+      // res.send(recipesSearch);
     }
   } catch (error) {
     debug(error);
@@ -107,11 +123,17 @@ router.post("/recipe", async (req, res) => {
   try {
     const fetchString = `https://api.spoonacular.com/recipes/${id}/information?apiKey=${spoonAPIKey}`;
     console.log(fetchString);
-    // const response = await fetch(fetchString);
-    // const recipe = await response.json();
-    // res.send(recipe);
 
-    res.send(recipeResult);
+    if (
+      fetchString ===
+      "https://api.spoonacular.com/recipes/642695/information?apiKey=332d07c641fd4c11af3cf76f666e3666"
+    ) {
+      res.send(individualFetaBurger);
+    } else {
+      const response = await fetch(fetchString);
+      const recipe = await response.json();
+      res.send(recipe);
+    }
   } catch (error) {
     debug(error);
     res.status(500).send(error);
@@ -127,15 +149,31 @@ router.post("/recipebulk", async (req, res) => {
   try {
     const fetchString = `https://api.spoonacular.com/recipes/informationBulk?apiKey=${spoonAPIKey}${idsString}`;
     console.log(fetchString);
-    // const response = await fetch(fetchString);
-    // const recipe = await response.json();
-    // res.send(recipe);
 
-    res.send(bulkRecipes);
+    if (
+      fetchString ===
+      "https://api.spoonacular.com/recipes/informationBulk?apiKey=332d07c641fd4c11af3cf76f666e3666&ids=642619,660370,642695"
+    ) {
+      res.send(listFetaSalmonSalmonNoodlesFetaBurgers);
+    } else {
+      const response = await fetch(fetchString);
+      const recipe = await response.json();
+      res.send(recipe);
+    }
   } catch (error) {
     debug(error);
     res.status(500).send(error);
   }
 });
 
+//how to grab results
+// const response = await fetch(fetchString);
+// const recipe = await response.json();
+// let recipe2 = JSON.stringify(recipe);
+// fs.writeFile("beef_cheese_salmon_tomato_pg3.txt", recipe2, function (err) {
+//   if (err) {
+//     console.log(err);
+//   }
+// });
+// res.send(recipe)
 export default router;
