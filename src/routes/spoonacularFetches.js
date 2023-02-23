@@ -130,6 +130,11 @@ router.post("/recipe", async (req, res) => {
       "https://api.spoonacular.com/recipes/642695/information?apiKey=332d07c641fd4c11af3cf76f666e3666"
     ) {
       res.send(individualFetaBurger);
+    } else if (
+      fetchString ===
+      "https://api.spoonacular.com/recipes/651341/information?apiKey=332d07c641fd4c11af3cf76f666e3666"
+    ) {
+      res.send(recipeResult);
     } else {
       const response = await fetch(fetchString);
       const recipe = await response.json();
