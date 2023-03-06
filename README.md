@@ -32,7 +32,7 @@ Recipe made Easy! - Server Repo
 
 Our mobile app allows you to scan items in your pantry and suggest recipes based on the ingredients scanned. Based on the suggestions, you can also vote with your family and friends what you all want for dinner!
 
-This project is divided into 3 parts: mobile, server, and website. This repo, mobile, has the code of our mobile app. The server repo is the one that contacts Spoonacular API. The website repo allows people to vote for people's favorite recipe.
+This project is divided into 3 parts: mobile, server, and website. This repo, server, has the code of our server app. The server repo is the one that contacts Spoonacular API. The website repo allows people to vote for people's favorite recipe.
 
 We hope that you have fun and enjoy our app!
 
