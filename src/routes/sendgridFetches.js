@@ -26,7 +26,7 @@ router.post("/sendmail", async (req, res) => {
     const emailaddresses = eventdb.data().Emails;
     const userIds = eventdb.data().UserIds;
 
-    // send emails
+    // send emails to recipients
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     for (const i in emailaddresses) {
       console.log("to: ", emailaddresses[i]);
@@ -37,7 +37,7 @@ router.post("/sendmail", async (req, res) => {
         to: `${emailaddresses[i]}`,
         from: "romell.bermundo@gmail.com",
         subject: "QuikDine Event",
-        html: `http://10.44.22.41:3000/vote?userId=${userIds[i]}&eventId=${eventId}`,
+        html: `Vote for you favorite meal here: http://10.44.22.41:3000/vote?userId=${userIds[i]}&eventId=${eventId}`,
       };
       sgMail.send(msg);
     }

@@ -16,10 +16,11 @@ Recipe made Easy! - Server Repo
 <div align="center">
 <img src="https://github.com/jaredhud/QuikDine-mobile/blob/main/src/img/architecture.jpg?raw=true" alt="QuikDine logo" style="width:100%">
 </div>
-<!-- <h1 align="center">QuikDine-mobile</h1> -->
 
+&nbsp;
 ## Table of Contents
 
+- [Table of Contents](#table-of-contents)
 - [Introduction](#introduction)
 - [Key Features](#key-features)
 - [Installation](#installation)
