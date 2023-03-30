@@ -22,7 +22,7 @@ Recipe made Easy! - Server Repo
 <a href="https://www.youtube.com/watch?v=kbyUfBJmxLE">
   <img src="https://img.shields.io/badge/DEMO%20-YOUTUBE VID%20%E2%86%92-gray.svg?colorA=5d5d5d&colorB=b30b00&style=for-the-badge" />
 <a href="https://github.com/jaredhud/QuikDine-mobile/tree/main/src/img/IU C9 P3 G3.pdf">
-<img src="https://img.shields.io/badge/PDF%20-DIGITAL FLYER%20%E2%86%92-gray.svg?colorA=5d5d5d&colorB=b30b00&style=for-the-badge"/></a>
+<img src="https://img.shields.io/badge/PDF%20-DIGITAL FLYER%20%E2%86%92-gray.svg?colorA=5d5d5d&colorB=ff7605&style=for-the-badge"/></a>
 &nbsp;
 </div>
 
